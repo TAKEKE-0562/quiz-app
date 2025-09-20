@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>早押しクイズ</title>
+</head>
+<body>
+  <h1>早押しクイズ</h1>
+  <button id="buzz">Buzz!</button>
+  <button id="reset">Reset</button>
+
+  <p id="status">まだ押されていません</p>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const buzzBtn = document.getElementById("buzz");
+    const resetBtn = document.getElementById("reset");
+    const status = document.getElementById("status");
+
+    buzzBtn.onclick = () => {
+      socket.emit("buzz");
+    };
+
+    resetBtn.onclick = () => {
+      socket.emit("reset");
+    };
+
+    socket.on("buzzed", (data) => {
+      status.textContent = `最初に押したのは ${data.user}`;
+    });
+
+    socket.on("reset", () => {
+      status.textContent = "リセットされました";
+    });
+  </script>
+</body>
+</html>
